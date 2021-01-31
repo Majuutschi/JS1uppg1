@@ -16,11 +16,15 @@ form {
     text-align: center;
 }
 
-.user {
+.user-back {
     color: rgb(121, 15, 121);
     padding: 1.5rem;
     margin-top: 1.5rem;
     border-radius: 1rem;
+    
+}
+
+.user {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,7 +35,26 @@ form {
     margin-right: 1rem;
 }
 
-i {
-    color: rgb(121, 15, 121);
+.btn-lila {
+    background-color: rgb(121, 15, 121);
+    color: rgb(240, 199, 199);
+    font-weight: bold;
 }
 
+.btn-green {
+    background-color: rgb(31, 167, 112);
+    color: rgb(232, 236, 234);
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+#firstName-error, #lastName-error, #email-error   {
+    color: rgb(240, 199, 199);
+    font-weight: bold;
+}
+
+
+.btn-light:hover {
+    background-color: rgb(240, 199, 199);
+    border-color: transparent;
+}

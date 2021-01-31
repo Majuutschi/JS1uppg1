@@ -1,68 +1,130 @@
-const form = document.querySelector('#userForm');
+const form = document.querySelector('#form');
+const output = document.querySelector('#output');
 const firstName = document.querySelector('#firstName');
 const lastName = document.querySelector('#lastName');
 const email = document.querySelector('#email');
-const list = document.querySelector('#users');
 
 let users = [];
 
-const listUsers = () => {
-    list.innerHTML = '';
+const listUsers = (users) => {
 
-    users.forEach(person => {
-        list.innerHTML += `
-        <div id="users" class="d-inline-block">
-        <div class="user bg-light">
-            <div>
-                <div>${person.firstName} ${person.lastName}</div>
-                <div class="small">${person.email}</div>
+    output.innerHTML = '';
+    users.forEach(user => {
+
+        let userData = `
+        <div class="bg-light user-back">
+            <div id="${user.id}" class="user">
+                <div class="text">
+                    <h3>${user.firstName} ${user.lastName}</h3>
+                    <small>${user.email}</small>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-green">Redigera</button>
+                    <button class="btn btn-lila">Radera</button>
+                </div>
             </div>
-            <div>
-                <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
-                <button class="btn"><i class="fas fa-trash"></i></button>
-            </div>
-        </div>
         </div>
         `
-        
-        
 
-      
+
+        output.innerHTML += userData;
     })
 }
 
-form.addEventListener('sumbit', (e)=> {
-    e.preventDefault();
-    
-    let person = {
-        id: Math.floor((Math.random() * 10000000000) +1).toString(),
-        firstName: firstName.value, 
-        lastName: lastName.value, 
-        email: email.value 
-    }
+const validateName = id => {
+    const input = document.querySelector('#' +id);
+    const error = document.querySelector('#' +input.id+ '-error');
 
-    if(firstName.value == '') {
-        alert("Fyll i ditt förnamn");
-        person.classList.remove('is-invalid');
-    } else if (lastName.value == '') {
-        alert("Fyll i ditt efternamn");
-        person.classList.remove('is-invalid');
-    } else if (email.value == '') {
-        alert("Fyll i din e-postadress");
-        person.classList.remove();
+    if(input.value === '') {
+        error.innerText = 'Ange ett namn';
+        return false;
+    } else if(input.value.length < 2) {
+        error.innerText = 'Namnet måste vara minst 2 bokstäver';
+        return false;
+    }
+    else {
+        error.innerText = '';
+        return true;
+    }
+}
+
+const validateEmail = id => {
+    const input = document.querySelector('#' +id);
+    const error = document.querySelector('#' +input.id+ '-error');
+
+    let regEx = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+
+    if(regEx.test(input.value)) {
+        error.innerText = '';
+        return true;
     } else {
-        users.push(person);
+        error.innerText = 'Ange en giltig e-postadress';
+        return false;
+    }
+}
+
+const validate = () => {
+
+    document.querySelectorAll('input').forEach(input => {
+            
+        if(input.type === "text") {
+            validateName(input.id);
+        } 
+
+        if(input.type === "email") {
+            validateEmail(input.id);
+        }
+
+    })
+}
+
+const createUser = (firstName, lastName, email) => {
+    let user = {
+        id: Date.now().toString(),
+        firstName,
+        lastName,
+        email
     }
 
-    listUsers();
+    users.push(user);
+    console.log(users);
+}
+
+listUsers(users);
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    validate();
+    
+    if(validateName('firstName') && validateName('lastName') && validateEmail('email')) {
+        
+        createUser(firstName.value, lastName.value, email.value);
+        listUsers(users);
+        form.reset();
+        firstName.focus();
+    }
 
 })
 
-// list.addEventListener('submit', (e) => {
-//     e.preventDefault();
-//     users = users.filter(user => user.id !== e.target.parentNode.id)
-//     listUsers();
-// })
+output.addEventListener('click', e => {
 
-listUsers();
-console.log(users);
+    if(e.target.classList.contains('btn-lila')) {
+        const deleteUser = () => {
+            
+        }
+        listUsers(users);
+        console.log('Radera')
+    }
+
+    if(e.target.classList.contains('btn-green')) {
+        
+        console.log('Redigera')
+    }
+})
+
+
+
+
+
+
